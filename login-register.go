@@ -1,9 +1,9 @@
 package forum
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -12,8 +12,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else {
 		r.ParseForm()
-		fmt.Println("username:", r.Form["username"])
-		fmt.Println("password:", r.Form["password"])
+		usernameorlogin := r.Form["username"]
+		password := r.Form["password"]
+		testemail := RemoveFromString(usernameorlogin[0])
+		if IsEmail(testemail) {
+
+		}
+		SendToDBLogin(usernameorlogin[0], password[0])
 	}
 }
 
@@ -23,8 +28,17 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		t.Execute(w, nil)
 	} else {
 		r.ParseForm()
-		fmt.Println("email:", r.Form["email"])
-		fmt.Println("username:", r.Form["username"])
-		fmt.Println("password:", r.Form["password"])
+		email := r.Form["email"]
+		username := r.Form["username"]
+		password := r.Form["password"]
+		SendToDBRegister(email[0], username[0], password[0])
 	}
+}
+
+func IsEmail(str string) bool {
+	bool := false
+	if strings.Contains(str, "@") {
+		bool = true
+	}
+	return bool
 }

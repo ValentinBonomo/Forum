@@ -35,7 +35,17 @@ func SendToDBRegister(email string, username string, password string) {
 	email = RemoveFromString(email)
 	username = RemoveFromString(username)
 	password = RemoveFromString(password)
-	db.Exec("INSERT INTO profile-data VALUES(?,?,?);", email, username, password)
+	db.Exec("INSERT INTO profile_data VALUES(?,?,?);", email, username, password)
+}
+
+func SendToDBLogin(username string, password string) {
+	db, err := sql.Open("sqlite3", "data_base.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	username = RemoveFromString(username)
+	password = RemoveFromString(password)
+	db.Exec("INSERT INTO profile_data VALUES(?,?);", username, password)
 }
 
 func RemoveFromString(arg string) string {
